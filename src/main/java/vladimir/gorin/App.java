@@ -5,6 +5,11 @@ import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import java.awt.*;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +26,9 @@ public class App {
     public static void main(String[] args) throws IOException {
         String readingFileName = args[0];
         File file = new File("");
-        String pathToReadingFile = file.getAbsolutePath() + "\\" + readingFileName + ".txt";
+        Path pathToReadingFile = Paths.get(file.getAbsolutePath() + "\\" + readingFileName + ".txt");
         String writingFileName = args[1];
-        String pathToWritingFile = file.getAbsolutePath() + "\\" + writingFileName + ".txt";
+        Path pathToWritingFile = Paths.get(file.getAbsolutePath() + "\\" + writingFileName + ".txt");
         int n = Integer.parseInt(args[2]);
         String[] arrIn;
         String[] arrIOut;
@@ -120,35 +125,34 @@ public class App {
         return count;
     }
 
-    private static void writingToFile(String fullName, String[] arr) throws IOException {
+    private static void writingToFile(Path fullName, String[] arr) throws IOException {
         int size = (int) Math.sqrt(arr.length);
-        byte[] buffer;
-        File file = new File(fullName);
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
 
+        try (BufferedWriter writer = Files.newBufferedWriter(fullName, StandardCharsets.UTF_8,
+                StandardOpenOption.WRITE)) {
             for (int i = 0; i < arr.length; i++) {
-                buffer = arr[i].getBytes();
-                fileOutputStream.write(buffer, 0, buffer.length);
-                if ((i + 1) % size == 0) {
-                    buffer = "\n".getBytes();
-                    fileOutputStream.write(buffer, 0, buffer.length);
+                writer.write(arr[i]);
+                if ((i+1)%size==0){
+                    writer.newLine();
                 }
             }
+            writer.flush();
         }
     }
 
-    private static String[] readingFromFile(String fullName) throws IOException {
-        File file = new File(fullName);
-        int c;
+    private static String[] readingFromFile(Path fullName) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        String[] arr;
-        try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            while ((c = fileInputStream.read()) != -1) {
-                if (((char) c == life) || (char) c == nonLife) {
-                    stringBuilder.append((char) c).append(";");
-                }
+        String row;
+        try (BufferedReader bufferedReader = Files.newBufferedReader(fullName, StandardCharsets.UTF_8)) {
+            while ((row = bufferedReader.readLine()) != null) {
+                stringBuilder.append(row);
             }
-            arr = stringBuilder.toString().split(";");
+        }
+        String result=stringBuilder.toString();
+        int n=result.length();
+        String[] arr=new String[n];
+        for (int i = 0; i < n; i++) {
+            arr[i]=result.substring(i,i+1);
         }
         return arr;
     }
