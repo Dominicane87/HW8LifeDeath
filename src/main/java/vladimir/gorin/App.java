@@ -23,8 +23,8 @@ import java.util.function.BiFunction;
 public class App {
     static final char life = '1';
     static final char nonLife = '0';
-    private static ForkJoinPool forkJoinPool = new ForkJoinPool(1);
-
+    private static ForkJoinPool forkJoinPool;
+    private static CommonTask commonTask;
     public static void main(String[] args) throws IOException {
         String readingFileName = args[0];
         File file = new File("");
@@ -35,23 +35,23 @@ public class App {
         String[] arrIn;
 
         arrIn = readingFromFile(pathToReadingFile);
-        CommonTask commonTask;
-        long start = System.currentTimeMillis();
-        for (int i=0;i<n;i++) {
-           commonTask=new CommonTask(arrIn);
+        arrIn=computePole(1,arrIn,n);
+        writingToFile(pathToWritingFile, arrIn);
+
+    }
+     static String[] computePole(int numberThreads, String[] arrIn, int countIterations){
+         forkJoinPool = new ForkJoinPool(numberThreads);
+        for (int i=0;i<countIterations;i++) {
+            commonTask=new CommonTask(arrIn);
             forkJoinPool.invoke(commonTask);
             arrIn=commonTask.getResult();
         }
-        System.out.println(System.currentTimeMillis()-start);
-
-
-        writingToFile(pathToWritingFile, arrIn);
-
+        return arrIn;
     }
 
 
 
-    private static void writingToFile(Path fullName, String[] arr) throws IOException {
+     static void writingToFile(Path fullName, String[] arr) throws IOException {
         int size = (int) Math.sqrt(arr.length);
 
         try (BufferedWriter writer = Files.newBufferedWriter(fullName, StandardCharsets.UTF_8,
@@ -66,7 +66,7 @@ public class App {
         }
     }
 
-    private static String[] readingFromFile(Path fullName) throws IOException {
+     static String[] readingFromFile(Path fullName) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         String row;
         try (BufferedReader bufferedReader = Files.newBufferedReader(fullName, StandardCharsets.UTF_8)) {
