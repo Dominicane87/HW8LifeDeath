@@ -26,7 +26,7 @@ public class AppTest
     }
 
     @Test
-    public void computePole() throws IOException {
+    public void computePole() throws Exception {
         String readingFileName = "fileForReading";
         File file = new File("");
         Path pathToReadingFile = Paths.get(file.getAbsolutePath() + "\\" + readingFileName + ".txt");
@@ -36,12 +36,12 @@ public class AppTest
 
 
         long start = System.currentTimeMillis();
-        App.computePole(1,arrIn,10);
+        App.computePole(arrIn,10);
         long finishOneThread = System.currentTimeMillis()-start;
 
 
         start = System.currentTimeMillis();
-        App.computePole(1,arrIn,10);
+        App.computePole(arrIn,10);
         long finishSecondThread = System.currentTimeMillis()-start;
 
         System.out.println("Finish Second Process: "+finishSecondThread);

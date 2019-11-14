@@ -3,15 +3,15 @@ package vladimir.gorin;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.RecursiveAction;
 import java.util.function.BiFunction;
 
 import static vladimir.gorin.App.life;
 import static vladimir.gorin.App.nonLife;
 
-public class MyTask extends RecursiveAction {
+public class MyTask implements Callable<Integer> {
 
-    private int result;
     private int computeCell;
     private String[] arrIn;
 
@@ -20,15 +20,11 @@ public class MyTask extends RecursiveAction {
         this.arrIn = arrIn;
     }
 
-    int getResult() {
-        return result;
-    }
-
     @Override
-    protected void compute() {
-        result=computeCell(arrIn,computeCell);
-
+    public Integer call()  {
+        return computeCell(arrIn,computeCell);
     }
+
     private static int computeCell(String[] arr, int i) {
         int countNeibours = countNeighbours(arr, i);
         if (arr[i].equals(String.valueOf(nonLife))) {
@@ -111,5 +107,8 @@ public class MyTask extends RecursiveAction {
         }
         return count;
     }
+
+
+
 }
 
