@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.RecursiveAction;
 import java.util.function.BiFunction;
 
 import static vladimir.gorin.App.life;
@@ -13,9 +12,9 @@ import static vladimir.gorin.App.nonLife;
 public class MyTask implements Callable<Integer> {
 
     private int computeCell;
-    private String[] arrIn;
+    private boolean[] arrIn;
 
-    MyTask(int computeCell, String[] arrIn) {
+    MyTask(int computeCell, boolean[] arrIn) {
         this.computeCell = computeCell;
         this.arrIn = arrIn;
     }
@@ -25,14 +24,14 @@ public class MyTask implements Callable<Integer> {
         return computeCell(arrIn,computeCell);
     }
 
-    private static int computeCell(String[] arr, int i) {
+    private static int computeCell(boolean[] arr, int i) {
         int countNeibours = countNeighbours(arr, i);
-        if (arr[i].equals(String.valueOf(nonLife))) {
+        if (arr[i]==nonLife) {
             if (countNeibours == 3) {
                 return i;
             }
         }
-        if (arr[i].equals(String.valueOf(life))) {
+        if (arr[i]==life) {
             if ((countNeibours < 2) || (countNeibours > 3)) {
                 return i;
             }
@@ -40,7 +39,7 @@ public class MyTask implements Callable<Integer> {
         return -1;
     }
 
-    private static int countNeighbours(String[] arr, int i) {
+    private static int countNeighbours(boolean[] arr, int i) {
         int count = 0;
         int size = (int) Math.sqrt(arr.length);
         int n = arr.length;
@@ -101,7 +100,7 @@ public class MyTask implements Callable<Integer> {
 
         for (String s : list) {
             int i1 = map.get(s).apply(i, size);
-            if (arr[i1].equals(String.valueOf(life))) {
+            if (arr[i1]==life) {
                 count++;
             }
         }

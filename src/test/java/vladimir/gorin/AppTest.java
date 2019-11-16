@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Unit test for simple App.
@@ -30,10 +32,9 @@ public class AppTest
         String readingFileName = "fileForReading";
         File file = new File("");
         Path pathToReadingFile = Paths.get(file.getAbsolutePath() + "\\" + readingFileName + ".txt");
-        String[] arrIn;
+        boolean[] arrIn;
 
         arrIn = readingFromFile(pathToReadingFile);
-
 
         long start = System.currentTimeMillis();
         App.computePole(arrIn,10);
