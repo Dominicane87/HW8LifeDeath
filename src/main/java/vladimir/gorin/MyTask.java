@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.function.BiFunction;
 
-import static vladimir.gorin.App.life;
-import static vladimir.gorin.App.nonLife;
+import static vladimir.gorin.App.LIFE;
+import static vladimir.gorin.App.NON_LIFE;
 
 public class MyTask implements Callable<Integer> {
 
@@ -26,12 +26,12 @@ public class MyTask implements Callable<Integer> {
 
     private static int computeCell(boolean[] arr, int i) {
         int countNeibours = countNeighbours(arr, i);
-        if (arr[i]==nonLife) {
+        if (arr[i]== NON_LIFE) {
             if (countNeibours == 3) {
                 return i;
             }
         }
-        if (arr[i]==life) {
+        if (arr[i]== LIFE) {
             if ((countNeibours < 2) || (countNeibours > 3)) {
                 return i;
             }
@@ -100,7 +100,7 @@ public class MyTask implements Callable<Integer> {
 
         for (String s : list) {
             int i1 = map.get(s).apply(i, size);
-            if (arr[i1]==life) {
+            if (arr[i1]== LIFE) {
                 count++;
             }
         }

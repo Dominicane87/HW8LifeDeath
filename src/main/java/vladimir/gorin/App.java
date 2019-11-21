@@ -10,14 +10,13 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
 
 /**
  * Hello world!
  */
 public class App {
-    static final boolean life = true;
-    static final boolean nonLife = false;
+    static final boolean LIFE = true;
+    static final boolean NON_LIFE = false;
     private static ExecutorService fixedThreadPool;
 
     public static void main(String[] args) throws Exception {
@@ -38,7 +37,6 @@ public class App {
 
     static boolean[] computePole(boolean[] arrIn, int countIterations) throws Exception {
         int count = -1;
-        boolean[] tmpIn = Arrays.copyOf(arrIn, arrIn.length);
         boolean[] result = Arrays.copyOf(arrIn, arrIn.length);
         List<MyTask> list = new ArrayList<>();
         for (int i = 0; i < countIterations; i++) {
@@ -50,16 +48,12 @@ public class App {
             for (Future<Integer> future : futures) {
                 count = future.get();
                 if (count != -1) {
-                    if (tmpIn[count]==nonLife) {
-                        result[count] = life;
-                    } else {
-                        result[count] = nonLife;
-                    }
+                    result[count]=!result[count];
                 }
             }
-            tmpIn = result;
+            arrIn = result;
         }
-        return tmpIn;
+        return arrIn;
     }
 
         static void writingToFile (Path fullName, boolean[]arr) throws IOException {
@@ -89,7 +83,7 @@ public class App {
             int n = result.length();
             boolean[] arr = new boolean[n];
             for (int i = 0; i < n; i++) {
-                arr[i] = result.substring(i, i + 1).equals("1")?true:false;
+                arr[i] = result.substring(i, i + 1).equals("1");
             }
             return arr;
         }
